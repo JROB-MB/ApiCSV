@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>mex motors</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Tu CSS personalizado -->
+    <link rel="stylesheet" href="styles.css"> <!-- Si tienes un archivo de estilos personalizado -->
+
+    <!-- Tus scripts JS -->
+    <script src="min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+</head>
+<body>
+
+<section class="py-5 text-center">
+    <div class="container">
+        <h1 class="display-4">Mex Motors</h1>
+    </div>
+</section>
+
+<div class="container mt-5">
+    <table class="table table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th>CVE Entidad</th>
+                <th>CVE Municipio</th>
+                <th>Descripción Municipio</th>
+                <th>Año</th>
+                <th>Valor</th>
+            </tr>
+        </thead>
+        <tbody id="tabla-body">
+            <!-- Los resultados de la API se mostrarán aquí -->
+        </tbody>
+    </table>
+</div>
+
+<div class="container mt-3">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Media del Valor</h5>
+            <p class="card-text" id="media-valor">
+                <!-- Aquí se mostrará la media del valor -->
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Tus scripts JS -->
+<script>
+    // Realizar la solicitud GET a la API en PHP para obtener los datos de la tabla
+    fetch('method.php')
+        .then(response => response.json())
+        .then(data => {
+            const tablaBody = document.getElementById('tabla-body');
+            data.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.cve_entidad}</td>
+                    <td>${item.cve_municipio}</td>
+                    <td>${item.desc_municipio}</td>
+                    <td>${item.ano}</td>
+                    <td>${item.valor}</td>
+                `;
+                tablaBody.appendChild(row);
+            });
+        })
+        .catch(error => console.error('Error:', error));
+
+    // Realizar la solicitud GET a la API para obtener la media del valor
+   // fetch('method.php', { method: 'POST' }) // Si 'method.php' no es el archivo correcto, cámbialo al archivo correcto
+     //   .then(response => response.json())
+       // .then(data => {
+         //   const mediaValorDiv = document.getElementById('media-valor');
+           // mediaValorDiv.innerHTML = `La media del valor es: ${data.media_valor}`;
+       // })
+       // .catch(error => console.error('Error:', error));
+
+        // Realizar la solicitud GET a la API para obtener la media del valor
+        fetch('method.php', { method: 'POST' })
+        .then(response => response.json())
+        .then(data => {
+          console.log(data); // Revisar la respuesta recibida en la consola
+          if (data.mediana_valor !== undefined) {
+            const mediaValorDiv = document.getElementById('media-valor');
+            mediaValorDiv.innerHTML = `La mediana del valor es: ${data.mediana_valor}`;
+          } else {
+            console.error('No se pudo obtener la mediana del valor.');
+          }
+        })
+        .catch(error => console.error('Error:', error));
+      
+
+</script>
+
+<!-- Scripts de Bootstrap y otros -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<!-- Otros scripts que puedas necesitar -->
+<script src="js/custom.js"></script>
+</body>
+</html>
