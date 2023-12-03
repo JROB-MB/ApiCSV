@@ -31,6 +31,7 @@
                 <th>Descripción Municipio</th>
                 <th>Año</th>
                 <th>Valor</th>
+                <th>cantidad_repeticiones</th>
             </tr>
         </thead>
         <tbody id="tabla-body">
@@ -42,9 +43,19 @@
 <div class="container mt-3">
     <div class="card">
         <div class="card-body">
-            <h5 class="card-title">Media del Valor</h5>
+            <h5 class="card-title">Mediana del Valor</h5>
             <p class="card-text" id="media-valor">
                 <!-- Aquí se mostrará la media del valor -->
+            </p>
+        </div>
+    </div>
+</div>
+<div class="container mt-3">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Average del Valor</h5>
+            <p class="card-text" id="average-valor">
+                <!-- Aquí se mostrará el average del valor -->
             </p>
         </div>
     </div>
@@ -81,7 +92,7 @@
        // .catch(error => console.error('Error:', error));
 
         // Realizar la solicitud GET a la API para obtener la media del valor
-        fetch('method.php', { method: 'POST' })
+        fetch('median.php', { method: 'GET' })
         .then(response => response.json())
         .then(data => {
           console.log(data); // Revisar la respuesta recibida en la consola
@@ -95,7 +106,45 @@
         .catch(error => console.error('Error:', error));
       
 
+        fetch('repeated.php') // Cambia el nombre del archivo PHP si es diferente
+        .then(response => response.json())
+        .then(data => {
+            const tablaBody = document.getElementById('tabla-body');
+            
+            // Mostrar los 10 primeros valores repetidos en la tabla
+            data.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>${item.valor}</td>
+                      <td>${item.cantidad_repeticiones}</td>
+                `;
+                tablaBody.appendChild(row);
+            });
+        })
+        .catch(error => console.error('Error:', error));
+
+        
+        fetch('average.php', { method: 'GET' })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data); // Check the received response in the console
+        if (data.media_valor !== undefined) {
+            const averageValorDiv = document.getElementById('average-valor');
+            averageValorDiv.innerHTML = `El average de valor es: ${data.media_valor}`;
+        } else {
+            console.error('No se pudo obtener el average del valor.');
+        }
+    })
+    .catch(error => console.error('Error:', error));
+
+
 </script>
+
+
 
 <!-- Scripts de Bootstrap y otros -->
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
